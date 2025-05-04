@@ -1,0 +1,7 @@
+.venv/
+.vscode/
+vault.yml
+.env
+inventory.yml
+*doodling.yml
+revert.yml

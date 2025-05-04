@@ -1,0 +1,19 @@
+---
+- name: Configure proxy settings on remote hosts
+  hosts: all
+  vars:
+    no_proxy_destinations: "{{ no_proxy | default('localhost,127.0.0.1,::1') }}"
+  
+  tasks:
+    - name: Create proxy.sh configuration file
+      ansible.builtin.copy:
+        dest: /etc/profile.d/proxy.sh
+        owner: root
+        group: root
+        mode: '0644'
+        content: |
+          export http_proxy="{{ proxy_url }}"
+          export https_proxy="{{ proxy_url }}"
+          export ftp_proxy="{{ proxy_url }}"
+          export no_proxy="{{ no_proxy_destinations }}"
+      when: proxy_url is defined

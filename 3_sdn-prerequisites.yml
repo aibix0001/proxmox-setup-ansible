@@ -1,0 +1,93 @@
+---
+
+- name: Install SDN prerequisites on Proxmox Host
+  hosts: all
+
+  vars:
+    ansible_user: root
+    bridge_port: ""
+
+  tasks:
+    - name: Update the apt package index
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all apt packages to the latest version
+      apt:
+        upgrade: dist
+        force_apt_get: yes
+
+    - name: Install packages
+      apt:
+        name:
+          - sudo
+          - git
+          - curl
+          - build-essential
+          - tmux
+          - mc
+          - termshark
+          - lnav
+          - libpve-network-perl
+          - dnsmasq
+          - frr-pythontools
+        state: present
+
+    - name: Ensure dnsmasq is disabled
+      systemd:
+        name: dnsmasq
+        enabled: false
+        state: stopped
+
+    - name: Config für sdn in network/interfaces inkludieren, falls nicht vorhanden
+      lineinfile:
+        path: /etc/network/interfaces
+        line: "source /etc/network/interfaces.d/*"
+        state: present
+        create: no
+        insertafter: EOF
+
+    - name: Config für sdn in network/interfaces inkludieren, falls nicht vorhanden
+      lineinfile:
+        path: /etc/network/interfaces
+        line: "### EIGENE CHANGES AB HIER EINBAUEN ###"
+        state: present
+        create: no
+        insertafter: EOF
+
+    - name: Clean up apt cache (optional)
+      apt:
+        autoclean: yes
+
+    - block:
+      - name: Set vmbr0 and member interfaces mtu configuration value to 2000
+        community.general.interfaces_file:
+          dest: /etc/network/interfaces
+        register: interfaces_cfg
+
+      - name: Access bridge-ports from interfaces_cfg
+        set_fact:
+          bridge_port: "{{ interfaces_cfg['ifaces']['vmbr0']['bridge-ports'] }}"
+
+      - name: Set bridge-port mtu configuration value to 2000
+        community.general.interfaces_file:
+          dest: /etc/network/interfaces
+          iface: "{{ bridge_port }}"
+          option: mtu
+          value: "{{ local_high_mtu }}"
+          backup: true
+          state: present
+
+      - name: Set vmbr0 mtu configuration value to 2000
+        community.general.interfaces_file:
+          dest: /etc/network/interfaces
+          iface: vmbr0
+          option: mtu
+          value: "{{ local_high_mtu }}"
+          backup: true
+          state: present
+
+      - name: Reload interfaces to apply MTU setting
+        ansible.builtin.shell:
+          cmd: ifreload -a
+      when: local_high_mtu is defined

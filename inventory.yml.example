@@ -1,0 +1,17 @@
+---
+
+pves:
+  vars:
+    ansible_user: root
+    repo: "deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription"
+    proxy_url: "http://<proxy_ip>:<proxy_port>"
+    no_proxy: "127.0.0.1,localhost,::1,<other_not_to_proxy_host>"
+    local_high_mtu: <local high mtu if possible>
+
+  hosts:
+    pve1:
+      ansible_host: <proxmox_ip1>
+    pve2:
+      ansible_host: <proxmox_ip2>
+    pve3:
+      ansible_host: <proxmox_ip3>
