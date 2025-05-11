@@ -1,0 +1,23 @@
+[project]
+name = "proxmox-setup-ansible"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ansible==11.3.0",
+    "ansible-core==2.18.3",
+    "bcrypt==4.3.0",
+    "cffi==1.17.1",
+    "cryptography==44.0.2",
+    "jinja2==3.1.6",
+    "markupsafe==3.0.2",
+    "packaging==24.2",
+    "paramiko==3.5.1",
+    "pycparser==2.22",
+    "pynacl==1.5.0",
+    "pyyaml==6.0.2",
+    "resolvelib==1.0.1",
+    "setuptools==75.8.2",
+    "wheel==0.45.1",
+]

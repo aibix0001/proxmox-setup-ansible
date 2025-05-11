@@ -5,3 +5,7 @@ vault.yml
 inventory.yml
 *doodling.yml
 revert.yml
+main.py
+.python-version
+uv.lock
+
