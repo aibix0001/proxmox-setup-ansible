@@ -1,6 +1,6 @@
 ---
 
-pves:
+proxmox:
   vars:
     ansible_user: root
     repo: "deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription"
