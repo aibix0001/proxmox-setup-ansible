@@ -73,6 +73,11 @@
           - libpve-network-perl
           - dnsmasq
           - frr-pythontools
+          - python3-pip
+          - python3-requests
+          - python3-urllib3
+          - duf
+          - ncdu
         state: present
 
     - name: Ensure dnsmasq is disabled
